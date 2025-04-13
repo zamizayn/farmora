@@ -1,8 +1,12 @@
-import 'package:farmora/screens/home/dashboard.dart';
+import 'package:farmora/providers/auth/authProvider.dart';
+import 'package:farmora/screens/authentication/signup.dart';
+import 'package:farmora/screens/common/loadingIndicator.dart';
 import 'package:farmora/utils/colors.dart';
 import 'package:farmora/utils/customUtils.dart';
 import 'package:farmora/utils/navigationUtils.dart';
+import 'package:farmora/utils/snackBarService.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Loginpage extends StatefulWidget {
   const Loginpage({super.key});
@@ -55,14 +59,8 @@ class _LoginpageState extends State<Loginpage> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      "assets/images/logo.jpg",
-                      height: 150,
-                      width: 150,
-                    ),
-                  ),
+                  LoadingIndicator(),
+                  AppIcon(),
                   SizedBox(
                     height: 30,
                   ),
@@ -104,22 +102,59 @@ class _LoginpageState extends State<Loginpage> {
                     child: CustomButton(
                         text: "Log In",
                         onPressed: () {
-                          NavigationUtils.navigateTo(context, Dashboard());
+                          checkLogin();
                         },
                         color: ColorUtils().primaryColor),
                   ),
                   SizedBox(
                     height: 10,
                   ),
-                  Text(
-                    "Don't have an account? Create account now",
-                    // style: TextStyle(fontWeight: FontWeight.bold),
+                  InkWell(
+                    onTap: (){
+                      NavigationUtils.navigateTo(context, Signup());
+                    },
+                    child: Text(
+                      "Don't have an account? Create account now",
+                      // style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   )
                 ],
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+
+  checkLogin(){
+    if(usernameController.text.isEmpty){
+      SnackbarService.showSnackbar("Username cannot be empty");
+    }
+    else if(passwordController.text.isEmpty){
+      SnackbarService.showSnackbar("Password cannot be empty");
+    }
+    else{
+      context.read<Authprovider>().login(usernameController.text, passwordController.text);
+    }
+  }
+}
+
+class AppIcon extends StatelessWidget {
+  const AppIcon({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      borderRadius: BorderRadius.circular(10),
+      child: Image.asset(
+        "assets/images/logo.jpg",
+        height: 150,
+        width: 150,
       ),
     );
   }
