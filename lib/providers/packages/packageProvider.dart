@@ -24,7 +24,9 @@ class Packageprovider with ChangeNotifier {
       packages["data"] ??= []; // Ensure it's initialized
       packages["data"].addAll(data["data"]);
     }
-
+    for(int i = 0;i<packages["data"].length;i++){
+      packages["data"][i]["selected"] = false;
+    }
     loading = false;
     notifyListeners();
   }

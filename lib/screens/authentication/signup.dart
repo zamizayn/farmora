@@ -1,9 +1,13 @@
+import 'package:farmora/providers/auth/authProvider.dart';
 import 'package:farmora/screens/authentication/loginPage.dart';
+import 'package:farmora/screens/common/loadingIndicator.dart';
 import 'package:farmora/utils/colors.dart';
 import 'package:farmora/utils/customUtils.dart';
 import 'package:farmora/utils/navigationUtils.dart';
+import 'package:farmora/utils/snackBarService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -92,5 +96,14 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  checkSignUp() {}
+  checkSignUp() async{
+    if(nameController.text.isNotEmpty && emailController.text.isNotEmpty){
+      await context.read<Authprovider>().signUp(nameController.text, emailController.text);
+      nameController.clear();
+      emailController.clear();
+    }else{
+      SnackbarService.showSnackbar("Please fill out all the fields");
+    }
+
+  }
 }

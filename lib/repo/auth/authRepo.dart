@@ -12,4 +12,14 @@ class Authrepo {
     }
     return response;
   }
+
+
+  Future<dynamic> signup(body) async {
+    final response = await WebService().post(Urls.signUp, body);
+    debugPrint("login response is $response");
+    if(response!["status"] == false){
+      SnackbarService.showSnackbar(response["error"]);
+    }
+    return response;
+  }
 }
